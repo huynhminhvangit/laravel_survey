@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
 {
@@ -14,7 +15,7 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        //
+        return "Hello, Same!";
     }
 
     /**
@@ -24,7 +25,7 @@ class SurveyController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.survey.create');
     }
 
     /**
@@ -35,7 +36,23 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect(route('surveys.create'))
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $validated = $validator->validated();
+
+        $request->user()->createdSurveys()->create($validated);
+
+        return redirect(route('surveys.index'));
+        
     }
 
     /**

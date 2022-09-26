@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->unsignedBigInteger('created_by')->unsigned();
-            $table->unsignedBigInteger('updated_by')->unsigned();
+            $table->foreignId('created_by')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable(true)->constrained('users', 'id')->cascadeOnDelete();
             $table->boolean('active')->default(true);
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
         });
     }
 

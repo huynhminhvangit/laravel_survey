@@ -18,14 +18,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('question_type');
             $table->boolean('is_require')->default(false);
-            $table->unsignedBigInteger('survey_id')->unsigned();
-            $table->unsignedBigInteger('created_by')->unsigned();
-            $table->unsignedBigInteger('updated_by')->unsigned();
+            $table->foreignId('survey_id')->constrained('surveys', 'id')->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable(true)->constrained('users', 'id')->cascadeOnDelete();
             $table->boolean('active')->default(true);
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
-            $table->foreign('survey_id')->references('id')->on('surveys');
         });
     }
 
